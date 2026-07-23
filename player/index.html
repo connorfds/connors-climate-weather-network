@@ -40,15 +40,20 @@
     <main id="player" aria-label="Live camera player"></main>
     <script>
       const mount = document.querySelector("#player");
-      const videoId =
-        new URLSearchParams(location.search).get("v") ||
-        decodeURIComponent(location.hash.slice(1)) ||
-        "";
 
-      if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
-        mount.innerHTML =
-          '<div class="message">Choose a camera in Connor&#39;s Climate Console.</div>';
-      } else {
+      function render() {
+        const videoId =
+          new URLSearchParams(location.search).get("v") ||
+          decodeURIComponent(location.hash.slice(1)) ||
+          "";
+
+        mount.replaceChildren();
+        if (!/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+          mount.innerHTML =
+            '<div class="message">Choose a camera in Connor&#39;s Climate Console.</div>';
+          return;
+        }
+
         const player = document.createElement("iframe");
         player.title = "Live camera video";
         player.allow =
@@ -61,6 +66,9 @@
           "?autoplay=1&mute=1&playsinline=1&rel=0";
         mount.append(player);
       }
+
+      addEventListener("hashchange", render);
+      render();
     </script>
   </body>
 </html>
